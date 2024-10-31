@@ -1,22 +1,29 @@
-# %%
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[20]:
+
+
 from pandas.io.formats.printing import PrettyDict
 from sklearn.datasets import fetch_openml
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.model_selection import train_test_split
 
 X, y = fetch_openml('mnist_784', version=1, return_X_y=True)
 
 X = X.values
 y= y.astype(int).values
 
-# %%
 print(X.shape)
 print(y.shape)
 
-# %%
 # Now we should normalize the pixel values
 X = ((X / 255.) - .5) * 2
 
-# %%
-import matplotlib.pyplot as plt
+
+# In[21]:
+
 
 fig, ax = plt.subplots(nrows=2, ncols=5, sharex=True, sharey=True)
 
@@ -28,10 +35,11 @@ for i in range(10):
 ax[0].set_xticks([])
 ax[0].set_yticks([])
 plt.tight_layout()
-# plt.show()
+plt.show()
 
-# %%
-import matplotlib.pyplot as plt
+
+# In[22]:
+
 
 fig, ax = plt.subplots(nrows=5, ncols=5, sharex=True, sharey=True)
 
@@ -43,24 +51,27 @@ for i in range(25):
 ax[0].set_xticks([])
 ax[0].set_yticks([])
 plt.tight_layout()
-# plt.show()
+plt.show()
 
-# %%
+
+# In[23]:
+
+
 # Train test split
-from sklearn.model_selection import train_test_split
-
 X_temp, X_test, y_temp, y_test = train_test_split(X,y, test_size=10000, random_state=123, stratify=y)
 
 X_train, X_valid, y_train, y_valid = train_test_split(X_temp, y_temp, test_size=5000, random_state=123, stratify=y_temp)
-# %%
+
 # import the neural network we just made
 from neuralnet import NeuralNetMLP, int_to_onehot
 
 model = NeuralNetMLP(num_features=28*28, num_hidden=50, num_classes=10)
 
-# %%
+
+# In[24]:
+
+
 # Training loop
-import numpy as np
 num_epochs = 50
 minibatch_size = 100
 
@@ -73,20 +84,22 @@ def minibatch_generator(X,y, minibatch_size):
             yield X[batch_idx], y[batch_idx]
 
 
-# %%
 # Lets test if the mini batches are getting generated!
+for i in range(num_epochs):
+   # iterate of minibatches
+   minibatch_gen = minibatch_generator(X_train, y_train, minibatch_size)
 
-#for i in range(num_epochs):
-#    # iterate of minibatches
-#    minibatch_gen = minibatch_generator(X_train, y_train, minibatch_size)
+   for X_train_mini, y_train_mini in minibatch_gen:
+       break
+   break
 
-#    for X_train_mini, y_train_mini in minibatch_gen:
-#        break
-#    break
+print(X_train_mini.shape)
+print(y_train_mini)
 
-#print(X_train_mini.shape)
-#print(y_train_mini)
-# %%
+
+# In[25]:
+
+
 def mse_loss(targets, probas, num_labels=10):
     one_hot_targets = int_to_onehot(
         targets, num_labels=num_labels
@@ -96,17 +109,20 @@ def mse_loss(targets, probas, num_labels=10):
 def accuracy(targets, predicted_labels):
     return np.mean(predicted_labels == targets)
 
-# %%
+
 # Lets test the preceiding functions
+_, probas = model.forward(X_valid)
+mse = mse_loss(y_valid, probas)
+print(f"Inital validation MSE: {mse:.1f}")
 
-#_, probas = model.forward(X_Valid)
-#mse = mse_loss(y_valid, probas)
-#print(f"Inital validation MSE: {mse:.1f}")
+predicted_labels = np.argmax(probas, axis=1)
+acc = accuracy(y_valid, predicted_labels)
+print(f"Inital Accuracy: {acc * 100:.1f}")
 
-#predicted_labels = np.argmax(probas, axis=1)
-#acc = accuracy(y_valid, predicted_labels)
-#print(f"Inital Accuracy: {acc * 100:.1f}")
-# %%
+
+# In[26]:
+
+
 def compute_mse_and_acc(nnet, X, y, num_labels=10, minibatch_size=100):
     mse, correct_pred, num_examples = 0., 0,0
     minibatch_gen = minibatch_generator(X, y, minibatch_size)
@@ -130,9 +146,12 @@ def compute_mse_and_acc(nnet, X, y, num_labels=10, minibatch_size=100):
 mse, acc = compute_mse_and_acc(model, X_valid, y_valid)
 print(f"Initial valid MSE: {mse:.1f}")
 print(f"Initial valid accuracy: {acc*100:.1f}%")
-# %%
-# Training
 
+
+# In[27]:
+
+
+# Training
 def train(model, X_train, y_train, X_valid, y_valid, num_epochs, learning_rate=0.1):
     epoch_loss = []
     epoch_train_acc = []
@@ -175,7 +194,7 @@ def train(model, X_train, y_train, X_valid, y_valid, num_epochs, learning_rate=0
 
     return epoch_loss, epoch_train_acc, epoch_valid_acc
 
-# %%
+
 # Actually training
 
 np.random.seed(123)
@@ -184,28 +203,30 @@ epoch_loss, epoch_train_acc, epoch_valid_acc = train(
 )
 
 
-# %%
+# In[28]:
+
 
 plt.plot(range(len(epoch_loss)), epoch_loss)
 plt.ylabel("MSE")
 plt.xlabel("Epoch")
+plt.title("MSE")
 plt.show()
 
-# %%
 
 plt.plot(range(len(epoch_train_acc)), epoch_train_acc, label="Training")
 plt.plot(range(len(epoch_valid_acc)), epoch_valid_acc, label="Validation")
 plt.ylabel('Accuracy')
 plt.xlabel('Epoch')
 plt.legend(loc="lower right")
+plt.title("Accuracy over epochs")
 plt.show()
 
-# %%
+
+# In[29]:
+
 
 valid_mse, valid_acc = compute_mse_and_acc(model, X_valid, y_valid)
 print(f"Validation accuracy: {valid_acc*100:.1f}%")
-
-# %%
 
 X_valid_subset = X_valid[:1000, :]
 y_valid_subset = y_valid[:1000]
@@ -233,3 +254,4 @@ ax[0].set_xticks([])
 ax[0].set_yticks([])
 plt.tight_layout()
 plt.show()
+

@@ -21,7 +21,7 @@ The key components of this project include:
 ## Project Files
 
 - **`neuralnet.py`**: Contains the `NeuralNetMLP` class, including the forward and backward pass functions.
-- **`mnist_training.py`**: A script that loads the MNIST dataset, preprocesses it, initializes the neural network, and performs the training.
+- **`train.py`**: A script that loads the MNIST dataset, preprocesses it, initializes the neural network, and performs the training.
 - **Visualization**: Code snippets to visualize both the training process and the network's performance.
 
 ## Installation
@@ -72,10 +72,11 @@ After training the model, the validation accuracy is printed, and plots for MSE 
 ## Visualization Examples
 
 ### Training Loss and Accuracy
-![Training Plots](images/training_plots.png)
+![Training Plots](./images/loss.png)
+![accuracy](./images/accuracy.png)
 
 ### Misclassified Digits
-![Misclassified Images](images/misclassified_images.png)
+![Misclassified Images](images/misclassified.png)
 
 ## Dataset
 
