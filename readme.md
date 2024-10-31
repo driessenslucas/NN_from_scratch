@@ -2,6 +2,8 @@
 
 This project demonstrates the implementation of a simple neural network from scratch in Python using **NumPy**. The network is trained on the classic **MNIST dataset**, which contains images of handwritten digits (0-9), and is aimed at building a foundational understanding of neural networks without the use of advanced machine learning libraries like TensorFlow or PyTorch.
 
+> Note: This isn't meant to be the best possible solution for this project, but rather just learning how Neural networks work.
+
 ## Project Overview
 
 The key components of this project include:
