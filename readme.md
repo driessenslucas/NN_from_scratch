@@ -5,7 +5,7 @@ This project demonstrates the implementation of a simple neural network from scr
 > **Note**: This isn't meant to be the best possible solution for this project, but rather just learning how Neural networks work.
 
 <!-- Set big NOTE -->
-> **Note**: To see an implementation of this with PyTorch, look at my other project ( *this one actually can predict quiet well* ): [Number mnist with PyTorch](https://github.com/driessenslucas/numbers_mnist)
+> **Note**: To see an implementation of this with PyTorch, look at my other project ( *this one actually can predict quite well* ): [Number mnist with PyTorch](https://github.com/driessenslucas/numbers_mnist)
 
 <!-- folding note -->
 <details>
