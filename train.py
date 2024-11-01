@@ -173,7 +173,8 @@ def train(model, X_train, y_train, X_valid, y_valid, num_epochs, learning_rate=0
             model.bias_hidden -= learning_rate * d_loss__d_b_h
             model.weight_output -= learning_rate * d_loss__d_w_out
             model.bias_output -= learning_rate * d_loss__d_b_out
-
+            
+            
         ### Epoch Logs ###
         train_mse, train_acc = compute_mse_and_acc(
             model, X_train, y_train
@@ -199,9 +200,23 @@ def train(model, X_train, y_train, X_valid, y_valid, num_epochs, learning_rate=0
 
 np.random.seed(123)
 epoch_loss, epoch_train_acc, epoch_valid_acc = train(
-    model, X_train, y_train, X_valid, y_valid, num_epochs=50, learning_rate=0.1
+    model, X_train, y_train, X_valid, y_valid, num_epochs=num_epochs, learning_rate=0.1
 )
 
+import pickle
+
+# Save the model weights and biases
+model_data = {
+    'weight_hidden': model.weight_hidden,
+    'bias_hidden': model.bias_hidden,
+    'weight_output': model.weight_output,
+    'bias_output': model.bias_output
+}
+
+with open('model_weights.pkl', 'wb') as f:
+    pickle.dump(model_data, f)
+
+print("Model weights saved to 'model_weights.pkl'.")
 
 # In[28]:
 
